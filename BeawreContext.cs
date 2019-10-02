@@ -9,7 +9,7 @@ namespace Core.Database
 {
     public class BeawreContext: DbContext, IBeawreContext
     {
-        public static string ConnectionString = "";
+        public static string ConnectionString = "Server=WORKSTATION1;Database=Beawre_PDP4E;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Risk> Risk { get; set; }
