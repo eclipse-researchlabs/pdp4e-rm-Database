@@ -19,6 +19,7 @@ namespace Core.Database
 
         public bool IsDeleted { get; set; }
 
+
         public EntityBase()
         {
             Branch = "def";
