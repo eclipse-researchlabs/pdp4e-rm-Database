@@ -19,6 +19,8 @@ namespace Core.Database.Tables
         CreateAsset = 1,
         MoveAsset = 2,
 
+        CreateContainer = 100,
+
         CreateAssetGroup = 200, 
         RemoveAssetGroup = 201,
 
