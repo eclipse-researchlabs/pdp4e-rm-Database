@@ -13,7 +13,7 @@ namespace Core.Database.Enums
         RiskPayload = 310,
         Treatment = 400,
         TreatmentPayload = 410,
-        Container 500,
+        Container = 500,
         AssetEdge = 700,
         Evidence = 800
     }
