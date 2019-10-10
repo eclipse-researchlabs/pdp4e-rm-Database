@@ -16,9 +16,10 @@ namespace Core.Database.QueryLanguages
         {
             Field(x => x.Id);
 
-            Field(x => x.Name, true);
+            Field(x => x.Name);
             Field(x => x.Description, true);
             Field(x => x.Payload, true);
+            //Field(x => x.RootId);
 
             Field<ListGraphType<VulnerabilityGraphQl>>(
                 name: "vulnerabilities",

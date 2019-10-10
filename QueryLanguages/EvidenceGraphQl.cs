@@ -15,6 +15,7 @@ namespace Core.Database.QueryLanguages
         {
             Field(x => x.Id);
             Field(x => x.IsDeleted);
+            //Field(x => x.RootId);
 
             //Field<TreatmentPayloadModel.TreatmentkPayloadGraphQl>(
             //    name: "payload",

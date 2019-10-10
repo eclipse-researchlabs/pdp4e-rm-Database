@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Core.Database.Tables;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace Core.Database
 {
     public class BeawreContext: DbContext, IBeawreContext
     {
-        public static string ConnectionString = "Server=WORKSTATION1;Database=Beawre_PDP4E;Trusted_Connection=True;MultipleActiveResultSets=true";
+        public static string ConnectionString = "Server=WORKSTATION1;Database=Beawre_VFR;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Risk> Risk { get; set; }
@@ -31,15 +32,27 @@ namespace Core.Database
             }
         }
 
-        public static void Initalize()
-        {
-            using(var db = new BeawreContext())
-                db.Database.Migrate();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AuditTrail>().Property(x => x.Action).HasConversion(new EnumToStringConverter<AuditTrailAction>());
+        }
+
+        public override int SaveChanges()
+        {
+            foreach (var entity in ChangeTracker.Entries().Where(x => x.State == EntityState.Added).Select(x => x.Entity as EntityBase).ToList())
+            {
+                entity.Id = Guid.NewGuid();
+                if (entity.RootId == Guid.Empty)
+                    entity.RootId = entity.Id;
+                entity.CreatedDateTime = DateTime.Now;
+            }
+
+            foreach (var entity in ChangeTracker.Entries().Where(x => x.State == EntityState.Modified).ToList())
+            {
+                Entry(entity.Entity).Property("CreatedOn").IsModified = false;
+            }
+
+            return base.SaveChanges();
         }
     }
 

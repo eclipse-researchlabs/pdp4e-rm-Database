@@ -16,9 +16,10 @@ namespace Core.Database.QueryLanguages
         {
             Field(x => x.Id);
 
-            Field(x => x.FromId, true);
-            Field(x => x.ToId, true);
+            Field(x => x.FromId);
+            Field(x => x.ToId);
             Field(x => x.Payload, true);
+            //Field(x => x.RootId);
 
             Field(x => x.IsDeleted);
             Field(x => x.CreatedDateTime);

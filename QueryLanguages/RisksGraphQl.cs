@@ -20,6 +20,7 @@ namespace Core.Database.QueryLanguages
             Field(x => x.Id);
             Field(x => x.Name);
             Field(x => x.Description);
+            //Field(x => x.RootId);
 
             Field<RiskPayloadModelGraphQl>(
                 name: "payload",

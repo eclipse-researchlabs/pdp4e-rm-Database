@@ -14,6 +14,8 @@ namespace Core.Database
         public string Branch { get; set; }
         public int Version { get; set; }
 
+        public Guid RootId { get; set; }
+
         public DateTime CreatedDateTime { get; set; }
         public Guid CreateByUserId { get; set; }
 

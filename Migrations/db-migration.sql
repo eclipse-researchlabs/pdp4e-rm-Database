@@ -20,6 +20,7 @@ CREATE TABLE [Asset] (
     [Description] nvarchar(max) NULL,
     [IsGroup] bit NOT NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Asset] PRIMARY KEY ([Id])
 );
 
@@ -35,6 +36,7 @@ CREATE TABLE [AuditTrail] (
     [Action] nvarchar(max) NOT NULL,
     [ObjectId] uniqueidentifier NOT NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_AuditTrail] PRIMARY KEY ([Id])
 );
 
@@ -49,6 +51,7 @@ CREATE TABLE [Evidence] (
     [IsDeleted] bit NOT NULL,
     [Name] nvarchar(max) NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Evidence] PRIMARY KEY ([Id])
 );
 
@@ -66,6 +69,7 @@ CREATE TABLE [Relationship] (
     [ToType] int NOT NULL,
     [ToId] uniqueidentifier NOT NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Relationship] PRIMARY KEY ([Id])
 );
 
@@ -81,6 +85,7 @@ CREATE TABLE [Risk] (
     [Name] nvarchar(max) NULL,
     [Description] nvarchar(max) NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Risk] PRIMARY KEY ([Id])
 );
 
@@ -94,6 +99,7 @@ CREATE TABLE [Risk_Payload] (
     [CreateByUserId] uniqueidentifier NOT NULL,
     [IsDeleted] bit NOT NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Risk_Payload] PRIMARY KEY ([Id])
 );
 
@@ -109,6 +115,7 @@ CREATE TABLE [Treatment] (
     [Type] nvarchar(max) NULL,
     [Description] nvarchar(max) NULL,
     [Name] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Treatment] PRIMARY KEY ([Id])
 );
 
@@ -122,6 +129,7 @@ CREATE TABLE [Treatment_Payload] (
     [CreateByUserId] uniqueidentifier NOT NULL,
     [IsDeleted] bit NOT NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Treatment_Payload] PRIMARY KEY ([Id])
 );
 
@@ -138,6 +146,7 @@ CREATE TABLE [User] (
     [Password] nvarchar(max) NULL,
     [AccountId] nvarchar(max) NULL,
     [Email] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_User] PRIMARY KEY ([Id])
 );
 
@@ -152,6 +161,7 @@ CREATE TABLE [Vulnerability] (
     [IsDeleted] bit NOT NULL,
     [Name] nvarchar(max) NULL,
     [Description] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Vulnerability] PRIMARY KEY ([Id])
 );
 
