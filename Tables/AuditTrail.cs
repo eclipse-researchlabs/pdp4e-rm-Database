@@ -35,5 +35,7 @@ namespace Core.Database.Tables
         CreateAssetEdge = 700,
 
         CreateUser = 800,
+
+        CreateRelationship = 900
     }
 }
