@@ -15,6 +15,8 @@ namespace Core.Database.Enums
         TreatmentPayload = 410,
         Container = 500,
         AssetEdge = 700,
-        Evidence = 800
+        Evidence = 800, 
+        Role = 900, 
+        User = 1000
     }
 }
