@@ -49,7 +49,7 @@ namespace Core.Database
 
             foreach (var entity in ChangeTracker.Entries().Where(x => x.State == EntityState.Modified).ToList())
             {
-                Entry(entity.Entity).Property("CreatedOn").IsModified = false;
+                Entry(entity.Entity).Property("CreatedDateTime").IsModified = false;
             }
 
             return base.SaveChanges();
