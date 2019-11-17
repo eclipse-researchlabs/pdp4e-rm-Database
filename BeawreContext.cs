@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using Core.Database.Tables;
@@ -11,6 +12,12 @@ namespace Core.Database
     public class BeawreContext: DbContext, IBeawreContext
     {
         public static string ConnectionString = "Server=WORKSTATION1;Database=Beawre_VFR;Trusted_Connection=True;MultipleActiveResultSets=true";
+
+        public BeawreContext()
+            : base()
+        {
+            this.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
+        }
 
         public DbSet<Asset> Assets { get; set; }
         public DbSet<Risk> Risk { get; set; }
