@@ -37,6 +37,7 @@ namespace Core.Database.Tables
         CreateUser = 800,
 
         CreateRelationship = 900, 
+        RemoveRelationship = 910,
 
         CreateEvidence = 1000,
     }
