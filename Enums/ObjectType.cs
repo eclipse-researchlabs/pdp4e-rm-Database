@@ -17,6 +17,8 @@ namespace Core.Database.Enums
         AssetEdge = 700,
         Evidence = 800, 
         Role = 900, 
-        User = 1000
+        User = 1000, 
+        SecurityGroup = 1100, 
+        SecurityAccess = 1200
     }
 }

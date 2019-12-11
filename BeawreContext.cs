@@ -28,6 +28,7 @@ namespace Core.Database
         public DbSet<Vulnerability> Vulnerability { get; set; }
         public DbSet<Relationship> Relationship { get; set; }
         public DbSet<User> User { get; set; }
+        public DbSet<Dictionary> Dictionary { get; set; }
 
         public DbSet<AuditTrail> AuditTrial { get; set; }
 
@@ -80,6 +81,7 @@ namespace Core.Database
         DbSet<Relationship> Relationship { get; set; }
 
         DbSet<User> User { get; set; }
+        DbSet<Dictionary> Dictionary { get; set; }
 
         DbSet<AuditTrail> AuditTrial { get; set; }
     }

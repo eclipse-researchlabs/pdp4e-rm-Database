@@ -167,6 +167,22 @@ CREATE TABLE [Vulnerability] (
 
 GO
 
+CREATE TABLE [Dictionary] (
+    [Id] uniqueidentifier NOT NULL,
+    [Branch] nvarchar(max) NULL,
+    [Version] int NOT NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [CreateByUserId] uniqueidentifier NOT NULL,
+    [IsDeleted] bit NOT NULL,
+	[Type] int NOT NULL,
+    [Symbol] nvarchar(max) NULL,
+    [Value] nvarchar(max) NULL,
+    [Payload] nvarchar(max) NULL,
+    CONSTRAINT [PK_Dictionary] PRIMARY KEY ([Id])
+);
+
+GO
+
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20191002113110_Initial migration', N'3.0.0');
 
