@@ -13,6 +13,7 @@ namespace Core.Users.Implementation.QueryLanguages
         {
             Field(x => x.Id);
             Field(x => x.Username);
+            Field(x => x.Email);
             Field(x => x.IsDeleted);
             Field(x => x.CreatedDateTime);
         }

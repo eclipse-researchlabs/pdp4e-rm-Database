@@ -178,6 +178,7 @@ CREATE TABLE [Dictionary] (
     [Symbol] nvarchar(max) NULL,
     [Value] nvarchar(max) NULL,
     [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
     CONSTRAINT [PK_Dictionary] PRIMARY KEY ([Id])
 );
 
