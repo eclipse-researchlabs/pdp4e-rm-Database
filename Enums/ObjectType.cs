@@ -19,6 +19,7 @@ namespace Core.Database.Enums
         Role = 900, 
         User = 1000, 
         SecurityGroup = 1100, 
-        SecurityAccess = 1200
+        SecurityAccess = 1200, 
+        Branch = 1300,
     }
 }
