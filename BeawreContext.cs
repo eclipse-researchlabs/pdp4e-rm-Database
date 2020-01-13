@@ -16,7 +16,7 @@ namespace Core.Database
         public BeawreContext()
             : base()
         {
-            //this.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
+            this.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
         }
 
         public DbSet<Asset> Assets { get; set; }
