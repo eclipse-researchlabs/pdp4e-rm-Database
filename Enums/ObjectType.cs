@@ -21,6 +21,7 @@ namespace Core.Database.Enums
         SecurityGroup = 1100, 
         SecurityAccess = 1200, 
         Branch = 1300,
-        SubContractor = 1400
+        SubContractor = 1400,
+        Notification  = 1500
     }
 }
