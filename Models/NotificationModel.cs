@@ -9,7 +9,12 @@ namespace Core.Database.Models
 {
     public class NotificationPayloadModel
     {
-        public NotificationTypes Type { get; set; }
+        public string Type { get; set; }
+
         public Guid? GuidValue1 { get; set; }
+
+        public string StringValue1 { get; set; }
+
+        public string StringValue2 { get; set; }
     }
 }
