@@ -16,5 +16,7 @@ namespace Core.Database.Tables
 
         //[Key, Column(Order = 1)]
         public string Email { get; set; }
+
+        public string Payload { get; set; }
     }
 }

@@ -184,6 +184,9 @@ CREATE TABLE [Dictionary] (
 
 GO
 
+ALTER TABLE [User]
+	ADD [Payload] nvarchar(max) NULL;
+
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20191002113110_Initial migration', N'3.0.0');
 
