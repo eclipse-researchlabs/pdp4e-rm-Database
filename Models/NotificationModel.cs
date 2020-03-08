@@ -18,5 +18,8 @@ namespace Core.Database.Models
         public string StringValue2 { get; set; }
         public string StringValue3 { get; set; }
         public string StringValue4 { get; set; }
+
+        public string Title { get; set; }
+        public string Content { get; set; }
     }
 }
