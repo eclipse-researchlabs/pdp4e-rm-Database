@@ -15,7 +15,7 @@ namespace Core.Database.QueryLanguages
         public NotificationGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
-            Field(x => x.Payload);
+            Field(x => x.Payload, true);
             Field(x => x.CreatedDateTime);
         }
     }

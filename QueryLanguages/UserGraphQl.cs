@@ -22,7 +22,7 @@ namespace Core.Users.Implementation.QueryLanguages
             Field(x => x.Username);
             Field(x => x.Email);
             Field(x => x.IsDeleted);
-            Field(x => x.Payload);
+            Field(x => x.Payload, true);
             Field(x => x.CreatedDateTime);
 
             Field<ListGraphType<NotificationGraphQl>>(
