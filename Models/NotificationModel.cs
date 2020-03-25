@@ -21,5 +21,7 @@ namespace Core.Database.Models
 
         public string Title { get; set; }
         public string Content { get; set; }
+
+        public bool IsRead { get; set; } = false;
     }
 }
