@@ -31,6 +31,8 @@ namespace Core.Database
         public DbSet<Dictionary> Dictionary { get; set; }
 
         public DbSet<AuditTrail> AuditTrial { get; set; }
+        public DbSet<Container> Container { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -84,5 +86,6 @@ namespace Core.Database
         DbSet<Dictionary> Dictionary { get; set; }
 
         DbSet<AuditTrail> AuditTrial { get; set; }
+        DbSet<Container> Container { get; set; }
     }
 }

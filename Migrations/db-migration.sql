@@ -192,3 +192,22 @@ VALUES (N'20191002113110_Initial migration', N'3.0.0');
 
 GO
 
+CREATE TABLE [Container] (
+    [Id] uniqueidentifier NOT NULL,
+    [Branch] nvarchar(max) NULL,
+    [Version] int NOT NULL,
+    [CreatedDateTime] datetime2 NOT NULL,
+    [CreateByUserId] uniqueidentifier NOT NULL,
+    [IsDeleted] bit NOT NULL,
+    [Name] nvarchar(max) NULL,
+	[Type] nvarchar(max) NULL,
+    [Payload] nvarchar(max) NULL,
+    [RootId] uniqueidentifier NOT NULL,
+    CONSTRAINT [PK_Container] PRIMARY KEY ([Id])
+);
+GO
+
+INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
+VALUES (N'20191002105721_Initial migration_container', N'3.0.0');
+GO
+
