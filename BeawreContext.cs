@@ -17,6 +17,7 @@ namespace Core.Database
             : base()
         {
             this.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
+            Database.SetCommandTimeout(120);
         }
 
         public DbSet<Asset> Assets { get; set; }
