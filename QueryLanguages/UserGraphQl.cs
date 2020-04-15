@@ -31,7 +31,7 @@ namespace Core.Users.Implementation.QueryLanguages
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     return dbContext.Relationship
-                        .Where(x => x.FromType == ObjectType.User && x.ToType == ObjectType.Notification &&
+                        .Where(x => !x.IsDeleted && x.FromType == ObjectType.User && x.ToType == ObjectType.Notification &&
                                     x.FromId == context.Source.Id).OrderByDescending(x => x.CreatedDateTime).ToList();
                 }
             );
