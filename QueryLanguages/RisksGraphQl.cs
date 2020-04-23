@@ -20,15 +20,15 @@ namespace Core.Database.QueryLanguages
             Field(x => x.Id);
             Field(x => x.Name);
             Field(x => x.Description);
-            //Field(x => x.RootId);
+            Field(x => x.RootId);
 
             Field<RiskPayloadModelGraphQl>(
                 name: "payload",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.Id && !x.IsDeleted).OrderByDescending(x => x.CreatedDateTime).Select(x => x.ToId).ToArray();
-                    var payload = dbContext.RiskPayload.FirstOrDefault(x => x.Id == relationships.FirstOrDefault()).Payload;
+                    var riskPayloadId = dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).ToId;
+                    var payload = dbContext.RiskPayload.Where(x => x.RootId == riskPayloadId).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault()).FirstOrDefault()?.Payload;
                     return string.IsNullOrEmpty(payload) ? new RiskPayloadModel() : JsonConvert.DeserializeObject<RiskPayloadModel>(payload);
                 });
 
@@ -37,24 +37,24 @@ namespace Core.Database.QueryLanguages
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Risk && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
             Field<ListGraphType<RisksGraphQl>>(
                 name: "risks",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Risk && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Risk.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
             Field<ListGraphType<TreatmentsGraphQl>>(
                 name: "treatments",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Risk && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Treatment.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
 
             Field(x => x.IsDeleted);

@@ -19,7 +19,7 @@ namespace Core.Database.QueryLanguages
             Field(x => x.Name);
             Field(x => x.Description, true);
             Field(x => x.Payload, true);
-            //Field(x => x.RootId);
+            Field(x => x.RootId);
 
             Field<ListGraphType<VulnerabilityGraphQl>>(
                 name: "vulnerabilities",
@@ -27,7 +27,7 @@ namespace Core.Database.QueryLanguages
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
             Field<ListGraphType<RisksGraphQl>>(
                 name: "risks",
@@ -35,7 +35,7 @@ namespace Core.Database.QueryLanguages
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Risk.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
             Field<ListGraphType<TreatmentsGraphQl>>(
                 name: "treatments",
@@ -43,7 +43,7 @@ namespace Core.Database.QueryLanguages
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Treatment.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
 
             Field<StringGraphType >(

@@ -20,7 +20,7 @@ namespace Core.Database.Payloads
         public string ImpactText { get; set; }
         public string LikelihoodText { get; set; }
 
-        public List<OwaspDictionary> Owasp = new List<OwaspDictionary>();
+        public List<OwaspDictionary> Owasp { get; set; }
     }
 
     public class RiskPayloadModelGraphQl : ObjectGraphType<RiskPayloadModel>
