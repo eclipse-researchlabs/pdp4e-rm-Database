@@ -6,6 +6,7 @@ using Core.Database.Enums;
 using Core.Database.Tables;
 using GraphQL.EntityFramework;
 using GraphQL.Types;
+using Newtonsoft.Json;
 
 namespace Core.Database.QueryLanguages
 {
@@ -24,8 +25,21 @@ namespace Core.Database.QueryLanguages
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.FromType == ObjectType.Container && x.ToType == ObjectType.Asset && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Assets.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    var relationships = dbContext.Relationship.Where(x =>
+                        x.FromType == ObjectType.Container && x.ToType == ObjectType.Asset &&
+                        x.FromId == context.Source.RootId && !x.IsDeleted).ToList()
+                        .Select(x => new{ x.ToId, payload = JsonConvert.DeserializeObject<AssetPayloadModel>(x.Payload ?? "{}") });
+                    var assetIds = relationships.Select(x => x.ToId).ToArray();
+                    var assets = dbContext.Assets.Where(x => assetIds.Contains(x.Id) && !x.IsDeleted).ToList();
+                    foreach (var asset in assets)
+                    {
+                        var relationship = relationships.FirstOrDefault(x => x.ToId == asset.Id);
+                        var payload = JsonConvert.DeserializeObject<AssetPayloadModel>(asset.Payload ?? "{}");
+                        if (!string.IsNullOrEmpty(relationship.payload.X)) payload.X = relationship.payload.X;
+                        if (!string.IsNullOrEmpty(relationship.payload.Y)) payload.Y = relationship.payload.Y;
+                        asset.Payload = JsonConvert.SerializeObject(payload);
+                    }
+                    return assets;
                 });
 
             Field<ListGraphType<RelationshipGraphQl>>(
