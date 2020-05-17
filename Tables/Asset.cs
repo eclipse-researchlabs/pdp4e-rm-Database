@@ -28,6 +28,7 @@ namespace Core.Database.Tables
         public string Icon { get; set; }
         public string Src { get; set; }
         public string LabelOffsetY { get; set; }
+        public object DfdQuestionaire { get; set; }
 
     }
 }
