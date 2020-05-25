@@ -58,7 +58,9 @@ namespace Core.Database.QueryLanguages
                 });
 
             Field(x => x.IsDeleted);
-            Field(x => x.CreatedDateTime);
+            Field<DateTimeGraphType>(
+                name: "createdDateTime",
+                resolve: context => context.Source.CreatedDateTime);
 
         }
     }

@@ -7,6 +7,7 @@ using Core.Database.Enums;
 using Core.Database.Payloads;
 using Core.Database.Tables;
 using GraphQL.EntityFramework;
+using GraphQL.Types;
 using Newtonsoft.Json;
 
 namespace Core.Database.QueryLanguages
@@ -34,7 +35,9 @@ namespace Core.Database.QueryLanguages
                     return dbContext.TreatmentPayload.FirstOrDefault(x => x.Id == relationships.FirstOrDefault());
                 });
 
-            Field(x => x.CreatedDateTime);
+            Field<DateTimeGraphType>(
+                name: "createdDateTime",
+                resolve: context => context.Source.CreatedDateTime);
 
         }
     }

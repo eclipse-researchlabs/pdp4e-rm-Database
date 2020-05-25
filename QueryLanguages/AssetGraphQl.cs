@@ -54,9 +54,19 @@ namespace Core.Database.QueryLanguages
                     return dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.Asset && x.FromType == ObjectType.AssetGroup && x.ToId == context.Source.Id && !x.IsDeleted)?.FromId;
                 });
 
-            Field(x => x.IsDeleted);
-            Field(x => x.CreatedDateTime);
+            Field<ListGraphType<EvidenceGraphQl>>(
+                name: "evidences",
+                resolve: context =>
+                {
+                    var dbContext = (BeawreContext)context.UserContext;
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Evidence && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Evidence.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+                });
 
+            Field(x => x.IsDeleted);
+            Field<DateTimeGraphType>(
+                name: "createdDateTime",
+                resolve: context => context.Source.CreatedDateTime);
         }
     }
 }
