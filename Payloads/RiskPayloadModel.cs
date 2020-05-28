@@ -9,6 +9,7 @@ namespace Core.Database.Payloads
 {
     public class RiskPayloadModel
     {
+        [JsonProperty("StrideCategory", NullValueHandling = NullValueHandling.Include)]
         public string StrideCategory { get; set; }
 
         [JsonProperty("LindunCategory", NullValueHandling = NullValueHandling.Include)]
