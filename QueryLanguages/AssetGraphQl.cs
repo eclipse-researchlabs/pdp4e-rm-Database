@@ -51,7 +51,7 @@ namespace Core.Database.QueryLanguages
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    return dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.Asset && x.FromType == ObjectType.AssetGroup && x.ToId == context.Source.Id && !x.IsDeleted)?.FromId;
+                    return dbContext.Relationship.FirstOrDefault(x => (x.ToType == ObjectType.Asset || x.ToType == ObjectType.AssetGroup) && x.FromType == ObjectType.AssetGroup && x.ToId == context.Source.Id && !x.IsDeleted)?.FromId;
                 });
 
             Field<ListGraphType<EvidenceGraphQl>>(
