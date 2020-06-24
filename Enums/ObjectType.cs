@@ -8,6 +8,7 @@ namespace Core.Database.Enums
     {
         Asset = 100,
         AssetGroup = 600,
+        AssetBpmn = 1700,
         Vulnerabilitie = 200, 
         Risk = 300, 
         RiskPayload = 310,
