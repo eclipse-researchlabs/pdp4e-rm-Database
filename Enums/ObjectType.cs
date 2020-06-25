@@ -8,7 +8,8 @@ namespace Core.Database.Enums
     {
         Asset = 100,
         AssetGroup = 600,
-        AssetBpmn = 1700,
+        AssetGroupBpmn = 610,
+        AssetBpmn = 110,
         Vulnerabilitie = 200, 
         Risk = 300, 
         RiskPayload = 310,
@@ -16,6 +17,7 @@ namespace Core.Database.Enums
         TreatmentPayload = 410,
         Container = 500,
         AssetEdge = 700,
+        AssetEdgeBpmn = 710,
         Evidence = 800, 
         Role = 900, 
         User = 1000, 
