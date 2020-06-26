@@ -25,6 +25,7 @@ namespace Core.Database.Enums
         SecurityAccess = 1200, 
         Branch = 1300,
         SubContractor = 1400,
-        Notification  = 1500
+        Notification  = 1500,
+        BpmnModel  = 1600
     }
 }
