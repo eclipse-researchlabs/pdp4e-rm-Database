@@ -27,7 +27,8 @@ namespace Core.Database.QueryLanguages
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var riskPayloadId = dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).ToId;
+                    var riskPayloadId = dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted)?.ToId;
+                    if (riskPayloadId == null) return new RiskPayloadModel();
                     var payload = dbContext.RiskPayload.Where(x => x.RootId == riskPayloadId).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault()).FirstOrDefault()?.Payload;
                     return string.IsNullOrEmpty(payload) ? new RiskPayloadModel() : JsonConvert.DeserializeObject<RiskPayloadModel>(payload);
                 });

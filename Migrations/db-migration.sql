@@ -207,6 +207,11 @@ CREATE TABLE [Container] (
 );
 GO
 
+ALTER TABLE [Vulnerability]
+	ADD [Payload] nvarchar(max) NULL;
+
+GO
+
 INSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])
 VALUES (N'20191002105721_Initial migration_container', N'3.0.0');
 GO
