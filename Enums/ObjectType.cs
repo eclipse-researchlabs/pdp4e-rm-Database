@@ -26,6 +26,7 @@ namespace Core.Database.Enums
         Branch = 1300,
         SubContractor = 1400,
         Notification  = 1500,
-        BpmnModel  = 1600
+        BpmnModel  = 1600, 
+        Comments = 1700
     }
 }
