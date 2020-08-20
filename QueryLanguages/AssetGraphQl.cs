@@ -5,6 +5,7 @@ using System.Text;
 using Core.Database;
 using Core.Database.Enums;
 using Core.Database.Tables;
+using GraphQL.Builders;
 using GraphQL.EntityFramework;
 using GraphQL.Types;
 
@@ -12,7 +13,31 @@ namespace Core.Database.QueryLanguages
 {
     public class AssetGraphQl : EfObjectGraphType<BeawreContext, Asset>
     {
-        public AssetGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public FieldType GetRisks()
+        {
+            return Field<ListGraphType<RisksGraphQl>>(
+                name: "risks",
+                resolve: context =>
+                {
+                    var dbContext = (BeawreContext)context.UserContext;
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+                });
+        }
+
+        public FieldType GetVulnerabilities()
+        {
+            return Field<ListGraphType<VulnerabilityGraphQl>>(
+                name: "vulnerabilities",
+                resolve: context =>
+                {
+                    var dbContext = (BeawreContext)context.UserContext;
+                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+                });
+        }
+
+        public AssetGraphQl(IEfGraphQLService<BeawreContext> graphQlService, string[] fieldsToLoad = null) : base(graphQlService)
         {
             Field(x => x.Id);
 
@@ -21,22 +46,12 @@ namespace Core.Database.QueryLanguages
             Field(x => x.Payload, true);
             Field(x => x.RootId);
 
-            Field<ListGraphType<VulnerabilityGraphQl>>(
-                name: "vulnerabilities",
-                resolve: context =>
-                {
-                    var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
-                });
-            Field<ListGraphType<RisksGraphQl>>(
-                name: "risks",
-                resolve: context =>
-                {
-                    var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
-                });
+            if (fieldsToLoad != null)
+            {
+                if (fieldsToLoad.Contains("vulnerabilities")) GetVulnerabilities();
+
+            }
+            GetRisks();
             Field<ListGraphType<TreatmentsGraphQl>>(
                 name: "treatments",
                 resolve: context =>
@@ -46,7 +61,7 @@ namespace Core.Database.QueryLanguages
                     return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
 
-            Field<StringGraphType >(
+            Field<StringGraphType>(
                 name: "group",
                 resolve: context =>
                 {
