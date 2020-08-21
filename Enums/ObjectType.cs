@@ -27,6 +27,8 @@ namespace Core.Database.Enums
         SubContractor = 1400,
         Notification  = 1500,
         BpmnModel  = 1600, 
-        Comments = 1700
+        Comments = 1700,
+        Flight = 1800,
+        Equipment = 1900,
     }
 }
