@@ -20,30 +20,50 @@ namespace Core.Database.QueryLanguages
             Field(x => x.Type, true);
             Field(x => x.Payload, true);
 
-            Field<ListGraphType<AssetGraphQl>>(
-                name: "assets",
-                resolve: context =>
-                {
-                    var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x =>
-                        x.FromType == ObjectType.Container && (x.ToType == ObjectType.Asset || x.ToType == ObjectType.AssetBpmn) &&
-                        x.FromId == context.Source.RootId && !x.IsDeleted).ToList()
-                        .Select(x => new { x.ToId, x.ToType, payload = (x.ToType == ObjectType.Asset ? JsonConvert.DeserializeObject<AssetPayloadModel>(x.Payload ?? "{}") : null) });
-                    var assetIds = relationships.Select(x => x.ToId).ToArray();
-                    var assets = dbContext.Assets.Where(x => assetIds.Contains(x.Id) && !x.IsDeleted).ToList();
-                    foreach (var asset in assets)
+            if (Config.Instance == Config.InstanceEnum.Core)
+            {
+                Field<ListGraphType<AssetGraphQl>>(
+                    name: "assets",
+                    resolve: context =>
                     {
-                        var relationship = relationships.FirstOrDefault(x => x.ToId == asset.Id);
-                        if (relationship.ToType == ObjectType.Asset)
+                        var dbContext = (BeawreContext) context.UserContext;
+                        var relationships = dbContext.Relationship.Where(x =>
+                                x.FromType == ObjectType.Container &&
+                                (x.ToType == ObjectType.Asset || x.ToType == ObjectType.AssetBpmn) &&
+                                x.FromId == context.Source.RootId && !x.IsDeleted).ToList()
+                            .Select(x => new
+                            {
+                                x.ToId, x.ToType,
+                                payload = (x.ToType == ObjectType.Asset
+                                    ? JsonConvert.DeserializeObject<AssetPayloadModel>(x.Payload ?? "{}")
+                                    : null)
+                            });
+                        var assetIds = relationships.Select(x => x.ToId).ToArray();
+                        var assets = dbContext.Assets.Where(x => assetIds.Contains(x.Id) && !x.IsDeleted).ToList();
+                        foreach (var asset in assets)
                         {
-                            var payload = JsonConvert.DeserializeObject<AssetPayloadModel>(asset.Payload ?? "{}");
-                            if (!string.IsNullOrEmpty(relationship.payload.X)) payload.X = relationship.payload.X;
-                            if (!string.IsNullOrEmpty(relationship.payload.Y)) payload.Y = relationship.payload.Y;
-                            asset.Payload = JsonConvert.SerializeObject(payload);
+                            var relationship = relationships.FirstOrDefault(x => x.ToId == asset.Id);
+                            if (relationship.ToType == ObjectType.Asset)
+                            {
+                                var payload = JsonConvert.DeserializeObject<AssetPayloadModel>(asset.Payload ?? "{}");
+                                if (!string.IsNullOrEmpty(relationship.payload.X)) payload.X = relationship.payload.X;
+                                if (!string.IsNullOrEmpty(relationship.payload.Y)) payload.Y = relationship.payload.Y;
+                                asset.Payload = JsonConvert.SerializeObject(payload);
+                            }
                         }
-                    }
-                    return assets;
-                });
+
+                        return assets;
+                    });
+
+                Field<ListGraphType<AssetGraphQl>>(
+                    name: "groups",
+                    resolve: context =>
+                    {
+                        var dbContext = (BeawreContext)context.UserContext;
+                        var relationships = dbContext.Relationship.Where(x => x.FromType == ObjectType.Container && (x.ToType == ObjectType.AssetGroup || x.ToType == ObjectType.AssetGroupBpmn) && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                        return dbContext.Assets.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    });
+            }
 
             Field<ListGraphType<RelationshipGraphQl>>(
                 name: "edges",
@@ -52,15 +72,6 @@ namespace Core.Database.QueryLanguages
                     var dbContext = (BeawreContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.FromType == ObjectType.Container && (x.ToType == ObjectType.AssetEdge || x.ToType == ObjectType.AssetEdgeBpmn) && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Relationship.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
-                });
-
-            Field<ListGraphType<AssetGraphQl>>(
-                name: "groups",
-                resolve: context =>
-                {
-                    var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.FromType == ObjectType.Container && (x.ToType == ObjectType.AssetGroup || x.ToType == ObjectType.AssetGroupBpmn) && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Assets.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
                 });
 
             Field<ListGraphType<RisksGraphQl>>(

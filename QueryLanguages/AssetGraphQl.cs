@@ -13,6 +13,34 @@ namespace Core.Database.QueryLanguages
 {
     public class AssetGraphQl : EfObjectGraphType<BeawreContext, Asset>
     {
+        public AssetGraphQl(IEfGraphQLService<BeawreContext> graphQlService, bool isEmptyLoad = false) : base(graphQlService)
+        {
+            if (!isEmptyLoad)
+            {
+                Field(x => x.Id);
+
+                Field(x => x.Name);
+                Field(x => x.Description, true);
+                Field(x => x.Payload, true);
+                Field(x => x.RootId);
+
+                if (Core.Database.Config.Instance == Config.InstanceEnum.Core)
+                {
+                    GetVulnerabilities();
+                }
+
+                GetRisks();
+                GetTreatments();
+                GetGroups();
+                GetEvidences();
+
+                Field(x => x.IsDeleted);
+                Field<DateTimeGraphType>(
+                    name: "createdDateTime",
+                    resolve: context => context.Source.CreatedDateTime);
+            }
+        }
+
         public FieldType GetRisks()
         {
             return Field<ListGraphType<RisksGraphQl>>(
@@ -37,22 +65,9 @@ namespace Core.Database.QueryLanguages
                 });
         }
 
-        public AssetGraphQl(IEfGraphQLService<BeawreContext> graphQlService, string[] fieldsToLoad = null) : base(graphQlService)
+        public FieldType GetTreatments()
         {
-            Field(x => x.Id);
-
-            Field(x => x.Name);
-            Field(x => x.Description, true);
-            Field(x => x.Payload, true);
-            Field(x => x.RootId);
-
-            if (fieldsToLoad != null)
-            {
-                if (fieldsToLoad.Contains("vulnerabilities")) GetVulnerabilities();
-
-            }
-            GetRisks();
-            Field<ListGraphType<TreatmentsGraphQl>>(
+            return Field<ListGraphType<TreatmentsGraphQl>>(
                 name: "treatments",
                 resolve: context =>
                 {
@@ -60,16 +75,22 @@ namespace Core.Database.QueryLanguages
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
+        }
 
-            Field<StringGraphType>(
+        public FieldType GetGroups()
+        {
+            return Field<StringGraphType>(
                 name: "group",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     return dbContext.Relationship.FirstOrDefault(x => (x.ToType == ObjectType.Asset || x.ToType == ObjectType.AssetGroup) && x.FromType == ObjectType.AssetGroup && x.ToId == context.Source.Id && !x.IsDeleted)?.FromId;
                 });
+        }
 
-            Field<ListGraphType<EvidenceGraphQl>>(
+        public FieldType GetEvidences()
+        {
+            return Field<ListGraphType<EvidenceGraphQl>>(
                 name: "evidences",
                 resolve: context =>
                 {
@@ -77,11 +98,6 @@ namespace Core.Database.QueryLanguages
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Evidence && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Evidence.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
-
-            Field(x => x.IsDeleted);
-            Field<DateTimeGraphType>(
-                name: "createdDateTime",
-                resolve: context => context.Source.CreatedDateTime);
         }
     }
 }
