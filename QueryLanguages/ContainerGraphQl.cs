@@ -16,6 +16,7 @@ namespace Core.Database.QueryLanguages
         {
             Field(x => x.Id);
             Field(x => x.Name, true);
+            Field(x => x.Version);
             Field(x => x.RootId);
             Field(x => x.Type, true);
             Field(x => x.Payload, true);
