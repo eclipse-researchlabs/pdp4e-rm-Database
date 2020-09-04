@@ -19,9 +19,12 @@ namespace Core.Database.QueryLanguages
             Field(x => x.FromId);
             Field(x => x.ToId);
             Field(x => x.Payload, true);
-            //Field(x => x.RootId);
+            Field(x => x.RootId);
 
-            GetVulnerabilities();
+            if (Core.Database.Config.Instance == Config.InstanceEnum.Core)
+            {
+                GetVulnerabilities();
+            }
             GetRisks();
             GetTreatments();
 

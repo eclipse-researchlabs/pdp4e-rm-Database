@@ -66,14 +66,20 @@ namespace Core.Database.QueryLanguages
                     });
             }
 
-            Field<ListGraphType<RelationshipGraphQl>>(
-                name: "edges",
-                resolve: context =>
-                {
-                    var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.FromType == ObjectType.Container && (x.ToType == ObjectType.AssetEdge || x.ToType == ObjectType.AssetEdgeBpmn) && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Relationship.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
-                });
+            if (Core.Database.Config.Instance == Config.InstanceEnum.Core)
+            {
+                Field<ListGraphType<RelationshipGraphQl>>(
+                    name: "edges",
+                    resolve: context =>
+                    {
+                        var dbContext = (BeawreContext) context.UserContext;
+                        var relationships = dbContext.Relationship.Where(x =>
+                            x.FromType == ObjectType.Container &&
+                            (x.ToType == ObjectType.AssetEdge || x.ToType == ObjectType.AssetEdgeBpmn) &&
+                            x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
+                        return dbContext.Relationship.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    });
+            }
 
             Field<ListGraphType<RisksGraphQl>>(
                 name: "risks",
