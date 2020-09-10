@@ -12,7 +12,6 @@ using Newtonsoft.Json;
 
 namespace Core.Database.QueryLanguages
 {
-
     public class TreatmentsGraphQl : EfObjectGraphType<BeawreContext, Treatment>
     {
         public TreatmentsGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
@@ -24,7 +23,7 @@ namespace Core.Database.QueryLanguages
             Field(x => x.IsDeleted);
             Field(x => x.RootId);
 
-            Field<TreatmentPayloadModel.TreatmentkPayloadGraphQl>(
+            Field<TreatmentPayloadGraphQl>(
                 name: "payload",
                 resolve: context =>
                 {

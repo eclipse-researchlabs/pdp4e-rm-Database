@@ -8,5 +8,7 @@ namespace Core.Database.Models
     public class TreatmentModel : Treatment
     {
         public int ClosedDescriptionProbability { get; set; } = 0;
+
+        public TreatmentPayload Payload { get; set; }
     }
 }

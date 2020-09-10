@@ -49,13 +49,17 @@ namespace Core.Database.QueryLanguages
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
-            Field<ListGraphType<TreatmentsGraphQl>>(
+
+            Field<ListGraphType<TreatmentPayloadGraphQl>>(
                 name: "treatments",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+
+                    var payloadEntryIds = dbContext.Relationship.Where(x =>
+                        x.FromType == ObjectType.Risk && x.ToType == ObjectType.TreatmentPayload &&
+                        x.FromId == context.Source.Id).Select(x => x.ToId);
+                    return dbContext.TreatmentPayload.Where(x => !x.IsDeleted && payloadEntryIds.Contains(x.Id)).ToList();
                 });
 
             Field(x => x.IsDeleted);

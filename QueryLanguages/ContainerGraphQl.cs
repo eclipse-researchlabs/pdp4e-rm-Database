@@ -90,14 +90,18 @@ namespace Core.Database.QueryLanguages
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Asset && assetsRelationships.Contains(x.FromId) && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
                 });
-            Field<ListGraphType<TreatmentsGraphQl>>(
+            Field<ListGraphType<TreatmentPayloadGraphQl>>(
                 name: "treatments",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
                     var assetsRelationships = dbContext.Relationship.Where(x => !x.IsDeleted && x.FromType == ObjectType.Container && x.FromId == context.Source.RootId && x.ToType == ObjectType.Asset).Select(x => x.ToId).ToArray();
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Asset && assetsRelationships.Contains(x.FromId) && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Treatment.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
+                    var payloadIds = dbContext.Relationship.Where(x => x.ToType == ObjectType.TreatmentPayload && x.FromType == ObjectType.Asset && assetsRelationships.Contains(x.FromId) && !x.IsDeleted).Select(x => x.ToId).ToList();
+
+                    var edgesRelationships = dbContext.Relationship.Where(x => !x.IsDeleted && x.FromType == ObjectType.Container && x.FromId == context.Source.RootId && x.ToType == ObjectType.AssetEdge).Select(x => x.ToId).ToArray();
+                    payloadIds.AddRange(dbContext.Relationship.Where(x => x.ToType == ObjectType.TreatmentPayload && x.FromType == ObjectType.Asset && edgesRelationships.Contains(x.FromId) && !x.IsDeleted).Select(x => x.ToId).ToList());
+
+                    return dbContext.TreatmentPayload.Where(x => payloadIds.Contains(x.Id) && !x.IsDeleted).ToList();
                 });
 
             Field(x => x.IsDeleted);

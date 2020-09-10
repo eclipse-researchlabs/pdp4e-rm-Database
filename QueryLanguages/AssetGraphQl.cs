@@ -67,13 +67,16 @@ namespace Core.Database.QueryLanguages
 
         public FieldType GetTreatments()
         {
-            return Field<ListGraphType<TreatmentsGraphQl>>(
+            return Field<ListGraphType<TreatmentPayloadGraphQl>>(
                 name: "treatments",
                 resolve: context =>
                 {
                     var dbContext = (BeawreContext)context.UserContext;
-                    var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Treatment && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
-                    return dbContext.Treatment.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
+
+                    var payloadEntryIds = dbContext.Relationship.Where(x =>
+                        x.FromType == ObjectType.Asset && x.ToType == ObjectType.TreatmentPayload &&
+                        x.FromId == context.Source.Id).Select(x => x.ToId);
+                    return dbContext.TreatmentPayload.Where(x => !x.IsDeleted && payloadEntryIds.Contains(x.Id)).ToList();
                 });
         }
 
