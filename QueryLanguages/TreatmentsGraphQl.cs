@@ -17,9 +17,9 @@ namespace Core.Database.QueryLanguages
         public TreatmentsGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
-            Field(x => x.Type);
-            Field(x => x.Name);
-            Field(x => x.Description);
+            Field(x => x.Type, true);
+            Field(x => x.Name, true);
+            Field(x => x.Description, true);
             Field(x => x.IsDeleted);
             Field(x => x.RootId);
 

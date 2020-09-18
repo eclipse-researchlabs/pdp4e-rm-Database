@@ -15,7 +15,7 @@ namespace Core.Database.QueryLanguages
         public TreatmentPayloadGraphQl()
         {
             Field(x => x.Id);
-            Field(x => x.Payload);
+            Field(x => x.Payload, true);
 
             Field<ListGraphType<EvidenceGraphQl>>(
                 name: "evidences",
