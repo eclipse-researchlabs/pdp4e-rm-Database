@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Core.Database.Payloads;
+﻿using Core.Database.Enums;
 using Core.Database.Tables;
 using GraphQL.EntityFramework;
-using Newtonsoft.Json;
+using GraphQL.Types;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Core.Database.QueryLanguages
 {
