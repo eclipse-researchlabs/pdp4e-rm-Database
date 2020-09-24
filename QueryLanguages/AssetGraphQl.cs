@@ -74,7 +74,7 @@ namespace Core.Database.QueryLanguages
                     var dbContext = (BeawreContext)context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
-                        x.FromType == ObjectType.Asset && x.ToType == ObjectType.TreatmentPayload &&
+                        (x.FromType == ObjectType.Asset || x.FromType == ObjectType.AssetEdge) && x.ToType == ObjectType.TreatmentPayload &&
                         x.FromId == context.Source.Id).Select(x => x.ToId);
                     return dbContext.TreatmentPayload.Where(x => !x.IsDeleted && payloadEntryIds.Contains(x.Id)).ToList();
                 });

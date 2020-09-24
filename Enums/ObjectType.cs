@@ -30,6 +30,7 @@ namespace Core.Database.Enums
         Comments = 1700,
         Flight = 1800,
         Equipment = 1900,
-        WeeklyReport = 2000
+        WeeklyReport = 2000,
+        RiskStatusReport = 2010,
     }
 }
