@@ -58,8 +58,8 @@ namespace Core.Database.QueryLanguages
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         x.FromType == ObjectType.Risk && x.ToType == ObjectType.TreatmentPayload &&
-                        x.FromId == context.Source.Id).Select(x => x.ToId);
-                    return dbContext.TreatmentPayload.Where(x => !x.IsDeleted && payloadEntryIds.Contains(x.Id)).ToList();
+                        x.FromId == context.Source.RootId).Select(x => x.ToId);
+                    return dbContext.TreatmentPayload.Where(x => !x.IsDeleted && payloadEntryIds.Contains(x.RootId)).ToList();
                 });
 
             Field(x => x.IsDeleted);
