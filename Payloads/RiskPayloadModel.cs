@@ -21,6 +21,9 @@ namespace Core.Database.Payloads
         public string ImpactText { get; set; }
         public string LikelihoodText { get; set; }
 
+        public bool PrivacyExtensionEnabled { get; set; }
+        public bool IsQuantitiveEnabled { get; set; }
+
         public List<OwaspDictionary> Owasp { get; set; }
     }
 
@@ -34,6 +37,8 @@ namespace Core.Database.Payloads
             Field<StringGraphType>("likelihoodText", resolve: x => x.Source.LikelihoodText);
             Field<StringGraphType>("stride", resolve: x => x.Source.StrideCategory);
             Field<StringGraphType>("lindun", resolve: x => x.Source.LindunCategory);
+            Field<StringGraphType>("privacyExtensionEnabled", resolve: x => x.Source.PrivacyExtensionEnabled);
+            Field<StringGraphType>("isQuantitiveEnabled", resolve: x => x.Source.IsQuantitiveEnabled);
             Field<ListGraphType<OwaspDictionaryGraphType>>("owasp", resolve: x => x.Source.Owasp);
         }
     }
