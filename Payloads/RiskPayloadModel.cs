@@ -24,6 +24,9 @@ namespace Core.Database.Payloads
         public bool PrivacyExtensionEnabled { get; set; }
         public bool IsQuantitiveEnabled { get; set; }
 
+        public string Status { get; set; }
+        public string StatusAdditionalData1 { get; set; }
+
         public List<OwaspDictionary> Owasp { get; set; }
     }
 
@@ -39,6 +42,8 @@ namespace Core.Database.Payloads
             Field<StringGraphType>("lindun", resolve: x => x.Source.LindunCategory);
             Field<StringGraphType>("privacyExtensionEnabled", resolve: x => x.Source.PrivacyExtensionEnabled);
             Field<StringGraphType>("isQuantitiveEnabled", resolve: x => x.Source.IsQuantitiveEnabled);
+            Field<StringGraphType>("status", resolve: x => x.Source.Status);
+            Field<StringGraphType>("statusAdditionalData1", resolve: x => x.Source.StatusAdditionalData1);
             Field<ListGraphType<OwaspDictionaryGraphType>>("owasp", resolve: x => x.Source.Owasp);
         }
     }
