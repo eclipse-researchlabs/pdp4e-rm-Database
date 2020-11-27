@@ -29,6 +29,7 @@ namespace Core.Database.Tables
         public string Src { get; set; }
         public string LabelOffsetY { get; set; }
         public object DfdQuestionaire { get; set; }
+        public int GeneratingVRT { get; set; }
 
     }
 }
