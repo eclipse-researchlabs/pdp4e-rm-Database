@@ -10,9 +10,9 @@ using GraphQL.Types;
 
 namespace Core.Database.QueryLanguages
 {
-    public class NotificationGraphQl : EfObjectGraphType<BeawreContext, Relationship>
+    public class NotificationGraphQl : EfObjectGraphType<DatabaseContext, Relationship>
     {
-        public NotificationGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public NotificationGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
             Field(x => x.Payload, true);

@@ -12,9 +12,9 @@ using Newtonsoft.Json;
 
 namespace Core.Database.QueryLanguages
 {
-    public class TreatmentsGraphQl : EfObjectGraphType<BeawreContext, Treatment>
+    public class TreatmentsGraphQl : EfObjectGraphType<DatabaseContext, Treatment>
     {
-        public TreatmentsGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public TreatmentsGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
             Field(x => x.Type, true);
@@ -27,7 +27,7 @@ namespace Core.Database.QueryLanguages
                 name: "payload",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship
                         .Where(x => x.ToType == ObjectType.TreatmentPayload && x.FromType == ObjectType.Treatment &&
                                     x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();

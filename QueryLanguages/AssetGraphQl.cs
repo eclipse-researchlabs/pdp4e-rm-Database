@@ -11,9 +11,9 @@ using GraphQL.Types;
 
 namespace Core.Database.QueryLanguages
 {
-    public class AssetGraphQl : EfObjectGraphType<BeawreContext, Asset>
+    public class AssetGraphQl : EfObjectGraphType<DatabaseContext, Asset>
     {
-        public AssetGraphQl(IEfGraphQLService<BeawreContext> graphQlService, bool isEmptyLoad = false) : base(graphQlService)
+        public AssetGraphQl(IEfGraphQLService<DatabaseContext> graphQlService, bool isEmptyLoad = false) : base(graphQlService)
         {
             if (!isEmptyLoad)
             {
@@ -47,7 +47,7 @@ namespace Core.Database.QueryLanguages
                 name: "risks",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -59,7 +59,7 @@ namespace Core.Database.QueryLanguages
                 name: "vulnerabilities",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -71,7 +71,7 @@ namespace Core.Database.QueryLanguages
                 name: "treatments",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         (x.FromType == ObjectType.Asset || x.FromType == ObjectType.AssetEdge) && x.ToType == ObjectType.TreatmentPayload &&
@@ -86,7 +86,7 @@ namespace Core.Database.QueryLanguages
                 name: "group",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     return dbContext.Relationship.FirstOrDefault(x => (x.ToType == ObjectType.Asset || x.ToType == ObjectType.AssetGroup) && x.FromType == ObjectType.AssetGroup && x.ToId == context.Source.Id && !x.IsDeleted)?.FromId;
                 });
         }
@@ -97,7 +97,7 @@ namespace Core.Database.QueryLanguages
                 name: "evidences",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Evidence && x.FromType == ObjectType.Asset && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Evidence.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });

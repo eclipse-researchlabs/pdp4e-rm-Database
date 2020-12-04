@@ -10,9 +10,9 @@ using GraphQL.Types;
 
 namespace Core.Database.QueryLanguages
 {
-    public class RelationshipGraphQl : EfObjectGraphType<BeawreContext, Relationship>
+    public class RelationshipGraphQl : EfObjectGraphType<DatabaseContext, Relationship>
     {
-        public RelationshipGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public RelationshipGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
 
@@ -39,7 +39,7 @@ namespace Core.Database.QueryLanguages
                 name: "risks",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.AssetEdge && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -51,7 +51,7 @@ namespace Core.Database.QueryLanguages
                 name: "vulnerabilities",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.AssetEdge && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -63,7 +63,7 @@ namespace Core.Database.QueryLanguages
                 name: "treatments",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         x.FromType == ObjectType.AssetEdge && x.ToType == ObjectType.TreatmentPayload &&

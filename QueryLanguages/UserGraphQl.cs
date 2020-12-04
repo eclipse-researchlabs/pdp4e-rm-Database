@@ -14,9 +14,9 @@ using Newtonsoft.Json.Linq;
 
 namespace Core.Users.Implementation.QueryLanguages
 {
-    public class UserGraphQl : EfObjectGraphType<BeawreContext, User>
+    public class UserGraphQl : EfObjectGraphType<DatabaseContext, User>
     {
-        public UserGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public UserGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
             Field(x => x.Username);
@@ -29,7 +29,7 @@ namespace Core.Users.Implementation.QueryLanguages
                 name: "notifications",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     return dbContext.Relationship
                         .Where(x => !x.IsDeleted && x.FromType == ObjectType.User && x.ToType == ObjectType.Notification &&
                                     x.FromId == context.Source.Id).OrderByDescending(x => x.CreatedDateTime).ToList();

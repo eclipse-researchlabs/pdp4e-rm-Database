@@ -13,9 +13,9 @@ using Newtonsoft.Json;
 namespace Core.Database.QueryLanguages
 {
 
-    public class RisksGraphQl : EfObjectGraphType<BeawreContext, Risk>
+    public class RisksGraphQl : EfObjectGraphType<DatabaseContext, Risk>
     {
-        public RisksGraphQl(IEfGraphQLService<BeawreContext> graphQlService) : base(graphQlService)
+        public RisksGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
         {
             Field(x => x.Id);
             Field(x => x.Name, true);
@@ -26,7 +26,7 @@ namespace Core.Database.QueryLanguages
                 name: "payload",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var riskPayloadId = dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted)?.ToId;
                     if (riskPayloadId == null) return new RiskPayloadModel();
                     var payload = dbContext.RiskPayload.Where(x => x.RootId == riskPayloadId).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault()).FirstOrDefault()?.Payload;
@@ -37,7 +37,7 @@ namespace Core.Database.QueryLanguages
                 name: "vulnerabilities",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -45,7 +45,7 @@ namespace Core.Database.QueryLanguages
                 name: "risks",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -54,7 +54,7 @@ namespace Core.Database.QueryLanguages
                 name: "treatments",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         x.FromType == ObjectType.Risk && x.ToType == ObjectType.TreatmentPayload &&
@@ -70,9 +70,9 @@ namespace Core.Database.QueryLanguages
         }
     }
 
-    public class RiskPayloadGraphQl : EfObjectGraphType<BeawreContext, RiskPayload>
+    public class RiskPayloadGraphQl : EfObjectGraphType<DatabaseContext, RiskPayload>
     {
-        public RiskPayloadGraphQl(IEfGraphQLService<BeawreContext> efGraphQlService) : base(efGraphQlService)
+        public RiskPayloadGraphQl(IEfGraphQLService<DatabaseContext> efGraphQlService) : base(efGraphQlService)
         {
             Field(x => x.Id);
             Field(x => x.IsDeleted);

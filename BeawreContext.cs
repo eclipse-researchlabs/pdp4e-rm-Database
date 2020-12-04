@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Database
 {
-    public class BeawreContext: DbContext, IBeawreContext
+    public class DatabaseContext: DbContext, IDatabaseContext
     {
         public static string ConnectionString = "Server=WORKSTATION1;Database=Beawre_VFR;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-        public BeawreContext()
+        public DatabaseContext()
             : base()
         {
             this.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
@@ -67,7 +67,7 @@ namespace Core.Database
         }
     }
 
-    public interface IBeawreContext: IDbContext
+    public interface IDatabaseContext: IDbContext
     {
         DbSet<Asset> Assets { get; set; }
 

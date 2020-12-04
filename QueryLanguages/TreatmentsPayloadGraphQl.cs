@@ -21,7 +21,7 @@ namespace Core.Database.QueryLanguages
                 name: "evidences",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Evidence && x.FromType == ObjectType.TreatmentPayload && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Evidence.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
                 });
@@ -30,7 +30,7 @@ namespace Core.Database.QueryLanguages
                 name: "definition",
                 resolve: context =>
                 {
-                    var dbContext = (BeawreContext)context.UserContext;
+                    var dbContext = (DatabaseContext)context.UserContext;
                     var treatmentId = dbContext.Relationship
                         .FirstOrDefault(x => x.ToType == ObjectType.TreatmentPayload &&
                                              x.FromType == ObjectType.Treatment &&
