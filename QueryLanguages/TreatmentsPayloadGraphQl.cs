@@ -1,4 +1,15 @@
-﻿using System;
+﻿// /********************************************************************************
+//  * Copyright (c) 2020,2021 Beawre Digital SL
+//  *
+//  * This program and the accompanying materials are made available under the
+//  * terms of the Eclipse Public License 2.0 which is available at
+//  * http://www.eclipse.org/legal/epl-2.0.
+//  *
+//  * SPDX-License-Identifier: EPL-2.0 3
+//  *
+//  ********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +32,7 @@ namespace Core.Database.QueryLanguages
                 name: "evidences",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Evidence && x.FromType == ObjectType.TreatmentPayload && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Evidence.Where(x => relationships.Contains(x.Id) && !x.IsDeleted).ToList();
                 });
@@ -30,7 +41,7 @@ namespace Core.Database.QueryLanguages
                 name: "definition",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var treatmentId = dbContext.Relationship
                         .FirstOrDefault(x => x.ToType == ObjectType.TreatmentPayload &&
                                              x.FromType == ObjectType.Treatment &&

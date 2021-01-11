@@ -1,4 +1,15 @@
-﻿using System;
+﻿// /********************************************************************************
+//  * Copyright (c) 2020,2021 Beawre Digital SL
+//  *
+//  * This program and the accompanying materials are made available under the
+//  * terms of the Eclipse Public License 2.0 which is available at
+//  * http://www.eclipse.org/legal/epl-2.0.
+//  *
+//  * SPDX-License-Identifier: EPL-2.0 3
+//  *
+//  ********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,12 +36,12 @@ namespace Core.Database.QueryLanguages
             {
                 GetVulnerabilities();
             }
+
             GetRisks();
             GetTreatments();
 
             Field(x => x.IsDeleted);
             Field(x => x.CreatedDateTime);
-
         }
 
         public FieldType GetRisks()
@@ -39,7 +50,7 @@ namespace Core.Database.QueryLanguages
                 name: "risks",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.AssetEdge && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -51,7 +62,7 @@ namespace Core.Database.QueryLanguages
                 name: "vulnerabilities",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.AssetEdge && x.FromId == context.Source.Id && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -63,7 +74,7 @@ namespace Core.Database.QueryLanguages
                 name: "treatments",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         x.FromType == ObjectType.AssetEdge && x.ToType == ObjectType.TreatmentPayload &&

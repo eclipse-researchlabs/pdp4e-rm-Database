@@ -1,4 +1,15 @@
-﻿using System;
+﻿// /********************************************************************************
+//  * Copyright (c) 2020,2021 Beawre Digital SL
+//  *
+//  * This program and the accompanying materials are made available under the
+//  * terms of the Eclipse Public License 2.0 which is available at
+//  * http://www.eclipse.org/legal/epl-2.0.
+//  *
+//  * SPDX-License-Identifier: EPL-2.0 3
+//  *
+//  ********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +23,6 @@ using Newtonsoft.Json;
 
 namespace Core.Database.QueryLanguages
 {
-
     public class RisksGraphQl : EfObjectGraphType<DatabaseContext, Risk>
     {
         public RisksGraphQl(IEfGraphQLService<DatabaseContext> graphQlService) : base(graphQlService)
@@ -26,7 +36,7 @@ namespace Core.Database.QueryLanguages
                 name: "payload",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var riskPayloadId = dbContext.Relationship.FirstOrDefault(x => x.ToType == ObjectType.RiskPayload && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted)?.ToId;
                     if (riskPayloadId == null) return new RiskPayloadModel();
                     var payload = dbContext.RiskPayload.Where(x => x.RootId == riskPayloadId).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault()).FirstOrDefault()?.Payload;
@@ -37,7 +47,7 @@ namespace Core.Database.QueryLanguages
                 name: "vulnerabilities",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Vulnerabilitie && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Vulnerability.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -45,7 +55,7 @@ namespace Core.Database.QueryLanguages
                 name: "risks",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
                     var relationships = dbContext.Relationship.Where(x => x.ToType == ObjectType.Risk && x.FromType == ObjectType.Risk && x.FromId == context.Source.RootId && !x.IsDeleted).Select(x => x.ToId).ToArray();
                     return dbContext.Risk.Where(x => relationships.Contains(x.RootId) && !x.IsDeleted).ToList().GroupBy(x => x.RootId).Select(x => x.OrderByDescending(y => y.Version).FirstOrDefault());
                 });
@@ -54,7 +64,7 @@ namespace Core.Database.QueryLanguages
                 name: "treatments",
                 resolve: context =>
                 {
-                    var dbContext = (DatabaseContext)context.UserContext;
+                    var dbContext = (DatabaseContext) context.UserContext;
 
                     var payloadEntryIds = dbContext.Relationship.Where(x =>
                         x.FromType == ObjectType.Risk && x.ToType == ObjectType.TreatmentPayload &&
@@ -66,7 +76,6 @@ namespace Core.Database.QueryLanguages
             Field<DateTimeGraphType>(
                 name: "createdDateTime",
                 resolve: context => context.Source.CreatedDateTime);
-
         }
     }
 

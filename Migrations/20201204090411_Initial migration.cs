@@ -1,4 +1,15 @@
-﻿using System;
+﻿// /********************************************************************************
+//  * Copyright (c) 2020,2021 Beawre Digital SL
+//  *
+//  * This program and the accompanying materials are made available under the
+//  * terms of the Eclipse Public License 2.0 which is available at
+//  * http://www.eclipse.org/legal/epl-2.0.
+//  *
+//  * SPDX-License-Identifier: EPL-2.0 3
+//  *
+//  ********************************************************************************/
+
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Core.Database.Migrations
@@ -23,10 +34,7 @@ namespace Core.Database.Migrations
                     IsGroup = table.Column<bool>(nullable: false),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Asset", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Asset", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "AuditTrail",
@@ -43,10 +51,7 @@ namespace Core.Database.Migrations
                     ObjectId = table.Column<Guid>(nullable: false),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuditTrail", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_AuditTrail", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Container",
@@ -63,10 +68,7 @@ namespace Core.Database.Migrations
                     Type = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Container", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Container", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Dictionary",
@@ -84,10 +86,7 @@ namespace Core.Database.Migrations
                     Value = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Dictionary", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Dictionary", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Evidence",
@@ -103,10 +102,7 @@ namespace Core.Database.Migrations
                     Name = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Evidence", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Evidence", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Relationship",
@@ -125,10 +121,7 @@ namespace Core.Database.Migrations
                     ToId = table.Column<Guid>(nullable: false),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Relationship", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Relationship", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Risk",
@@ -145,10 +138,7 @@ namespace Core.Database.Migrations
                     Description = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Risk", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Risk", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Risk_Payload",
@@ -163,10 +153,7 @@ namespace Core.Database.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Risk_Payload", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Risk_Payload", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Treatment",
@@ -183,10 +170,7 @@ namespace Core.Database.Migrations
                     Description = table.Column<string>(nullable: true),
                     Name = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Treatment", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Treatment", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Treatment_Payload",
@@ -201,10 +185,7 @@ namespace Core.Database.Migrations
                     IsDeleted = table.Column<bool>(nullable: false),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Treatment_Payload", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Treatment_Payload", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "User",
@@ -223,10 +204,7 @@ namespace Core.Database.Migrations
                     Email = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_User", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Vulnerability",
@@ -243,10 +221,7 @@ namespace Core.Database.Migrations
                     Description = table.Column<string>(nullable: true),
                     Payload = table.Column<string>(nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vulnerability", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Vulnerability", x => x.Id); });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

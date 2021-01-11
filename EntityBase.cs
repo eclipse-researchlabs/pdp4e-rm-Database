@@ -1,4 +1,15 @@
-﻿using System;
+﻿// /********************************************************************************
+//  * Copyright (c) 2020,2021 Beawre Digital SL
+//  *
+//  * This program and the accompanying materials are made available under the
+//  * terms of the Eclipse Public License 2.0 which is available at
+//  * http://www.eclipse.org/legal/epl-2.0.
+//  *
+//  * SPDX-License-Identifier: EPL-2.0 3
+//  *
+//  ********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,8 +19,15 @@ namespace Core.Database
 {
     public class EntityBase
     {
-        [Key, Column(Order = 0)]
-        public Guid Id { get; set; }
+        public EntityBase()
+        {
+            Branch = "def";
+            Version = 1;
+            CreatedDateTime = DateTime.Now;
+            IsDeleted = false;
+        }
+
+        [Key, Column(Order = 0)] public Guid Id { get; set; }
 
         public string Branch { get; set; }
         public int Version { get; set; }
@@ -20,15 +38,5 @@ namespace Core.Database
         public Guid CreateByUserId { get; set; }
 
         public bool IsDeleted { get; set; }
-
-
-        public EntityBase()
-        {
-            Branch = "def";
-            Version = 1;
-            CreatedDateTime = DateTime.Now;
-            IsDeleted = false;
-        }
-
     }
 }
